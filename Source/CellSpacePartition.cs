@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using RectangleFLib;
 
 namespace CellSpacePartition
 {
@@ -52,6 +53,7 @@ namespace CellSpacePartition
 		/// <param name="cellsY">and vertically</param>
 		public CellSpacePartition(Vector2 worldSize, int cellsX, int cellsY)
 		{
+			Cells = new List<Cell>();
 			WorldSize = worldSize;
 			NumCells = new Point(cellsX, cellsY);
 			Neighbors = new List<IMovingEntity>();
@@ -67,7 +69,7 @@ namespace CellSpacePartition
 					float left = x * CellSize.X;
 					float top = y * CellSize.Y;
 
-					Cells.Add(new Cell(new Rectangle((int)left, (int)top, (int)CellSize.X, (int)CellSize.Y)));
+					Cells.Add(new Cell(new RectangleF(left, top, CellSize.X, CellSize.Y)));
 				}
 			}
 		}
@@ -78,7 +80,7 @@ namespace CellSpacePartition
 		/// </summary>
 		/// <param name="pos"></param>
 		/// <returns></returns>
-		int PositionToIndex(Vector2 pos)
+		public int PositionToIndex(Vector2 pos)
 		{
 			int idx = (int)(NumCells.X * pos.X / WorldSize.X) +
 					  ((int)(NumCells.Y * pos.Y / WorldSize.Y) * NumCells.X);
@@ -98,7 +100,7 @@ namespace CellSpacePartition
 		/// </summary>
 		/// <param name="ent"></param>
 		/// <param name="pos"></param>
-		public void AddEntity(IMovingEntity ent)
+		public void Add(IMovingEntity ent)
 		{
 			int sz = Cells.Count;
 			int idx = PositionToIndex(ent.Position);
@@ -111,7 +113,7 @@ namespace CellSpacePartition
 		/// If so the data structure is updated accordingly
 		/// </summary>
 		/// <param name="ent"></param>
-		public void UpdateEntity(IMovingEntity ent)
+		public void Update(IMovingEntity ent)
 		{
 			//if the index for the old pos and the new pos are not equal then the entity has moved to another cell.
 			int OldIdx = PositionToIndex(ent.OldPosition);
@@ -135,34 +137,45 @@ namespace CellSpacePartition
 		/// </summary>
 		/// <param name="TargetPos"></param>
 		/// <param name="QueryRadius"></param>
-		public void CalculateNeighbors(Vector2 TargetPos, float QueryRadius)
+		public void CalculateNeighbors(Vector2 targetPos, float queryRadius)
 		{
 			//clear out the list of neighbors
 			Neighbors.Clear();
 
-			//create the query box that is the bounding box of the target's query area
-			float halfRadius = QueryRadius * 0.5f;
-			Vector2 upLeft = TargetPos - new Vector2(halfRadius, halfRadius);
-			Rectangle QueryBox = new Rectangle((int)upLeft.X, (int)upLeft.Y, (int)QueryRadius, (int)QueryRadius);
+			RectangleF queryBox = CreateQueryBox(targetPos, queryRadius);
 
 			//iterate through each cell and test to see if its bounding box overlaps with the query box. 
 			//If it does and it also contains entities then make further proximity tests.
+			float radiusSquared = (queryRadius * queryRadius);
 			for (int i = 0; i < Cells.Count; i++)
 			{
 				//test to see if this cell contains members and if it overlaps the query box
-				if (Cells[i].BBox.Intersects(QueryBox) && (0 < Cells[i].Items.Count))
+				if ((0 < Cells[i].Items.Count) && Cells[i].BBox.Intersects(queryBox))
 				{
 					//add any entities found within query radius to the neighbor list
 					for (int j = 0; j < Cells[i].Items.Count; j++)
 					{
-						if (Vector2.DistanceSquared(Cells[i].Items[j].Position, TargetPos) <
-							(QueryRadius * QueryRadius))
+						float distToDude = Vector2.DistanceSquared(Cells[i].Items[j].Position, targetPos);
+						if (distToDude <= radiusSquared)
 						{
 							Neighbors.Add(Cells[i].Items[j]);
 						}
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// create the query box that is the bounding box of the target's query area
+		/// </summary>
+		/// <param name="TargetPos"></param>
+		/// <param name="QueryRadius"></param>
+		/// <returns></returns>
+		public static RectangleF CreateQueryBox(Vector2 targetPos, float queryRadius)
+		{
+			float halfRadius = queryRadius * 0.5f;
+			Vector2 upLeft = targetPos - new Vector2(halfRadius, halfRadius);
+			return new RectangleF(upLeft.X, upLeft.Y, queryRadius, queryRadius);
 		}
 
 		/// <summary>

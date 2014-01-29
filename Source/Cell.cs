@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using RectangleFLib;
 
 namespace CellSpacePartition
 {
@@ -18,7 +19,7 @@ namespace CellSpacePartition
 		/// <summary>
 		/// the cell's bounding box
 		/// </summary>
-		public Rectangle BBox { get; private set; }
+		public RectangleF BBox { get; private set; }
 
 		#endregion //Members
 
@@ -29,7 +30,7 @@ namespace CellSpacePartition
 		/// </summary>
 		/// <param name="topleft"></param>
 		/// <param name="botright"></param>
-		public Cell(Rectangle area)
+		public Cell(RectangleF area)
 		{
 			Items = new List<IMovingEntity>();
 			BBox = area;
