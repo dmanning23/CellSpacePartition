@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace CellSpacePartition
+namespace CellSpacePartitionLib
 {
 	/// <summary>
 	/// A simple moving entity with position and old position

@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using RectangleFLib;
 
-namespace CellSpacePartition
+namespace CellSpacePartitionLib
 {
 	/// <summary>
 	/// defines a cell containing a list of pointers to entities

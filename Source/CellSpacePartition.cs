@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using RectangleFLib;
 
-namespace CellSpacePartition
+namespace CellSpacePartitionLib
 {
 	/// <summary>
 	/// class to divide a 2D space into a grid of cells each of which may contain a number of entities. 
