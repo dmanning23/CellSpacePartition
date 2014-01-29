@@ -39,7 +39,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Source\Cell.cs">
+      <Link>Cell.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\CellSpacePartition.cs">
+      <Link>CellSpacePartition.cs</Link>
+    </Compile>
+    <Compile Include="..\Source\IMovingEntity.cs">
+      <Link>IMovingEntity.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\externals\MonoGame\MonoGame.Framework\MonoGame.Framework.WindowsGL.csproj">
+      <Project>{7de47032-a904-4c29-bd22-2d235e8d91ba}</Project>
+      <Name>MonoGame.Framework.WindowsGL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\externals\MonoGame\ThirdParty\Lidgren.Network\Lidgren.Network.Windows.csproj">
+      <Project>{ae483c29-042e-4226-ba52-d247ce7676da}</Project>
+      <Name>Lidgren.Network.Windows</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
