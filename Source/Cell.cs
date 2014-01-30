@@ -7,14 +7,14 @@ namespace CellSpacePartitionLib
 	/// <summary>
 	/// defines a cell containing a list of pointers to entities
 	/// </summary>
-	public class Cell
+	public class Cell<T> where T : IMovingEntity
 	{
 		#region Members 
 
 		/// <summary>
 		/// all the entities inhabiting this cell
 		/// </summary>
-		public List<IMovingEntity> Items { get; private set; }
+		public List<T> Items { get; private set; }
 
 		/// <summary>
 		/// the cell's bounding box
@@ -32,7 +32,7 @@ namespace CellSpacePartitionLib
 		/// <param name="botright"></param>
 		public Cell(RectangleF area)
 		{
-			Items = new List<IMovingEntity>();
+			Items = new List<T>();
 			BBox = area;
 		}
 

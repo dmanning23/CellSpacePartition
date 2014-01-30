@@ -12,19 +12,19 @@ namespace CellSpacePartitionLib
 	/// If an entity is capable of moving, and therefore capable of moving between cells, the Update 
 	/// method should be called each update-cycle to sychronize the entity and the cell space it occupies
 	/// </summary>
-	public class CellSpacePartition
+	public class CellSpacePartition<T> where T : IMovingEntity
 	{
 		#region Members
 
 		/// <summary>
 		/// the required amount of cells in the space
 		/// </summary>
-		public List<Cell> Cells { get; private set; }
+		public List<Cell<T>> Cells { get; private set; }
 
 		/// <summary>
 		/// this is used to store any valid neighbors when an agent searches its neighboring space
 		/// </summary>
-		public List<IMovingEntity> Neighbors { get; private set; }
+		public List<T> Neighbors { get; private set; }
 
 		/// <summary>
 		/// the width and height of the world space the entities inhabit
@@ -53,10 +53,10 @@ namespace CellSpacePartitionLib
 		/// <param name="cellsY">and vertically</param>
 		public CellSpacePartition(Vector2 worldSize, int cellsX, int cellsY)
 		{
-			Cells = new List<Cell>();
+			Cells = new List<Cell<T>>();
 			WorldSize = worldSize;
 			NumCells = new Point(cellsX, cellsY);
-			Neighbors = new List<IMovingEntity>();
+			Neighbors = new List<T>();
 
 			//calculate bounds of each cell
 			CellSize = new Vector2((WorldSize.X / NumCells.X), (WorldSize.Y / NumCells.Y));
@@ -69,7 +69,7 @@ namespace CellSpacePartitionLib
 					float left = x * CellSize.X;
 					float top = y * CellSize.Y;
 
-					Cells.Add(new Cell(new RectangleF(left, top, CellSize.X, CellSize.Y)));
+					Cells.Add(new Cell<T>(new RectangleF(left, top, CellSize.X, CellSize.Y)));
 				}
 			}
 		}
@@ -100,7 +100,7 @@ namespace CellSpacePartitionLib
 		/// </summary>
 		/// <param name="ent"></param>
 		/// <param name="pos"></param>
-		public void Add(IMovingEntity ent)
+		public void Add(T ent)
 		{
 			int sz = Cells.Count;
 			int idx = PositionToIndex(ent.Position);
@@ -113,7 +113,7 @@ namespace CellSpacePartitionLib
 		/// If so the data structure is updated accordingly
 		/// </summary>
 		/// <param name="ent"></param>
-		public void Update(IMovingEntity ent)
+		public void Update(T ent)
 		{
 			//if the index for the old pos and the new pos are not equal then the entity has moved to another cell.
 			int OldIdx = PositionToIndex(ent.OldPosition);
