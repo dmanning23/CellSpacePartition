@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using BasicPrimitiveBuddy;
 using System.Collections.Generic;
 using RectangleFLib;
 
@@ -34,6 +35,14 @@ namespace CellSpacePartitionLib
 		{
 			Items = new List<T>();
 			BBox = area;
+		}
+
+		/// <summary>
+		/// call this to render the cell edges
+		/// </summary>
+		public void RenderCell(IBasicPrimitive primitive)
+		{
+			primitive.Rectangle(BBox, Color.White);
 		}
 
 		#endregion //Methods

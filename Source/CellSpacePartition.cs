@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using RectangleFLib;
+using BasicPrimitiveBuddy;
 
 namespace CellSpacePartitionLib
 {
@@ -192,13 +193,13 @@ namespace CellSpacePartitionLib
 		/// <summary>
 		/// call this to render the cell edges
 		/// </summary>
-		public void RenderCells()
+		/// <param name="primitive"></param>
+		public void RenderCells(IBasicPrimitive primitive)
 		{
-			//std::vector<Cell<entity> >::const_iterator curCell;
-			//for (curCell=m_Cells.begin(); curCell!=m_Cells.end(); ++curCell)
-			//{
-			//  curCell->BBox.Render(false);
-			//}
+			foreach (var cell in Cells)
+			{
+				cell.RenderCell(primitive);
+			}
 		}
 
 		#endregion //Methods

@@ -51,6 +51,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\BasicPrimitiveBuddy\Windows\BasicPrimitiveBuddy.Windows.csproj">
+      <Project>{0faa1286-7bfa-4765-8b51-62e438cb121d}</Project>
+      <Name>BasicPrimitiveBuddy.Windows</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.WindowsGL.csproj">
       <Project>{7de47032-a904-4c29-bd22-2d235e8d91ba}</Project>
       <Name>MonoGame.Framework.WindowsGL</Name>
