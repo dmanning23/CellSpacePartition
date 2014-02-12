@@ -40,9 +40,9 @@ namespace CellSpacePartitionLib
 		/// <summary>
 		/// call this to render the cell edges
 		/// </summary>
-		public void RenderCell(IBasicPrimitive primitive)
+		public void RenderCell(IBasicPrimitive primitive, Color color)
 		{
-			primitive.Rectangle(BBox, Color.White);
+			primitive.Rectangle(BBox, color);
 		}
 
 		#endregion //Methods

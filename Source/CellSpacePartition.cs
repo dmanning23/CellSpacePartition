@@ -174,9 +174,11 @@ namespace CellSpacePartitionLib
 		/// <returns></returns>
 		public static RectangleF CreateQueryBox(Vector2 targetPos, float queryRadius)
 		{
-			float halfRadius = queryRadius * 0.5f;
+			float twoRadius = queryRadius * MathHelper.PiOver2;
+			float halfRadius = twoRadius * 0.5f;
+
 			Vector2 upLeft = targetPos - new Vector2(halfRadius, halfRadius);
-			return new RectangleF(upLeft.X, upLeft.Y, queryRadius, queryRadius);
+			return new RectangleF(upLeft.X, upLeft.Y, twoRadius, twoRadius);
 		}
 
 		/// <summary>
@@ -190,6 +192,8 @@ namespace CellSpacePartitionLib
 			}
 		}
 
+		#region Debug Rendering
+
 		/// <summary>
 		/// call this to render the cell edges
 		/// </summary>
@@ -198,9 +202,27 @@ namespace CellSpacePartitionLib
 		{
 			foreach (var cell in Cells)
 			{
-				cell.RenderCell(primitive);
+				cell.RenderCell(primitive, Color.White);
 			}
 		}
+
+		public void RenderCellIntersections(IBasicPrimitive primitive, Vector2 targetPos, float queryRadius, Color color)
+		{
+			RectangleF queryBox = CreateQueryBox(targetPos, queryRadius);
+
+			//iterate through each cell and test to see if its bounding box overlaps with the query box. 
+			for (int i = 0; i < Cells.Count; i++)
+			{
+				//test to see if this cell contains members and if it overlaps the query box
+				if (Cells[i].BBox.Intersects(queryBox))
+				{
+					//draw the cell
+					Cells[i].RenderCell(primitive, color);
+				}
+			}
+		}
+
+		#endregion //Debug Rendering
 
 		#endregion //Methods
 	}
