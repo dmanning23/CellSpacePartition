@@ -184,7 +184,7 @@ namespace CellSpacePartitionLib
 		/// <summary>
 		/// empties the cells of entities
 		/// </summary>
-		public void EmptyCells()
+		public void Clear()
 		{
 			for (int i = 0; i < Cells.Count; i++)
 			{
