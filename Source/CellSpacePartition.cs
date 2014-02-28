@@ -23,11 +23,6 @@ namespace CellSpacePartitionLib
 		public List<Cell<T>> Cells { get; private set; }
 
 		/// <summary>
-		/// this is used to store any valid neighbors when an agent searches its neighboring space
-		/// </summary>
-		public List<T> Neighbors { get; private set; }
-
-		/// <summary>
 		/// the width and height of the world space the entities inhabit
 		/// </summary>
 		public Vector2 WorldSize { get; private set; }
@@ -57,7 +52,6 @@ namespace CellSpacePartitionLib
 			Cells = new List<Cell<T>>();
 			WorldSize = worldSize;
 			NumCells = new Point(cellsX, cellsY);
-			Neighbors = new List<T>();
 
 			//calculate bounds of each cell
 			CellSize = new Vector2((WorldSize.X / NumCells.X), (WorldSize.Y / NumCells.Y));
@@ -138,10 +132,10 @@ namespace CellSpacePartitionLib
 		/// </summary>
 		/// <param name="TargetPos"></param>
 		/// <param name="QueryRadius"></param>
-		public void CalculateNeighbors(Vector2 targetPos, float queryRadius)
+		public List<T> CalculateNeighbors(Vector2 targetPos, float queryRadius)
 		{
-			//clear out the list of neighbors
-			Neighbors.Clear();
+			//create the list of neighbors
+			List<T> neighbors = new List<T>();
 
 			RectangleF queryBox = CreateQueryBox(targetPos, queryRadius);
 
@@ -159,11 +153,13 @@ namespace CellSpacePartitionLib
 						float distToDude = Vector2.DistanceSquared(Cells[i].Items[j].Position, targetPos);
 						if (distToDude <= radiusSquared)
 						{
-							Neighbors.Add(Cells[i].Items[j]);
+							neighbors.Add(Cells[i].Items[j]);
 						}
 					}
 				}
 			}
+
+			return neighbors;
 		}
 
 		/// <summary>
