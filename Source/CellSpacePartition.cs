@@ -64,7 +64,7 @@ namespace CellSpacePartitionLib
 					float left = x * CellSize.X;
 					float top = y * CellSize.Y;
 
-					Cells.Add(new Cell<T>(new RectangleF(left, top, CellSize.X, CellSize.Y)));
+					Cells.Add(new Cell<T>(new RectangleFLib.RectangleF(left, top, CellSize.X, CellSize.Y)));
 				}
 			}
 		}
@@ -137,7 +137,7 @@ namespace CellSpacePartitionLib
 			//create the list of neighbors
 			List<T> neighbors = new List<T>();
 
-			RectangleF queryBox = CreateQueryBox(targetPos, queryRadius);
+			RectangleFLib.RectangleF queryBox = CreateQueryBox(targetPos, queryRadius);
 
 			//iterate through each cell and test to see if its bounding box overlaps with the query box. 
 			//If it does and it also contains entities then make further proximity tests.
@@ -168,13 +168,13 @@ namespace CellSpacePartitionLib
 		/// <param name="TargetPos"></param>
 		/// <param name="QueryRadius"></param>
 		/// <returns></returns>
-		public static RectangleF CreateQueryBox(Vector2 targetPos, float queryRadius)
+		public static RectangleFLib.RectangleF CreateQueryBox(Vector2 targetPos, float queryRadius)
 		{
 			float twoRadius = queryRadius * MathHelper.PiOver2;
 			float halfRadius = twoRadius * 0.5f;
 
 			Vector2 upLeft = targetPos - new Vector2(halfRadius, halfRadius);
-			return new RectangleF(upLeft.X, upLeft.Y, twoRadius, twoRadius);
+			return new RectangleFLib.RectangleF(upLeft.X, upLeft.Y, twoRadius, twoRadius);
 		}
 
 		/// <summary>
@@ -204,7 +204,7 @@ namespace CellSpacePartitionLib
 
 		public void RenderCellIntersections(IBasicPrimitive primitive, Vector2 targetPos, float queryRadius, Color color)
 		{
-			RectangleF queryBox = CreateQueryBox(targetPos, queryRadius);
+			RectangleFLib.RectangleF queryBox = CreateQueryBox(targetPos, queryRadius);
 
 			//iterate through each cell and test to see if its bounding box overlaps with the query box. 
 			for (int i = 0; i < Cells.Count; i++)
