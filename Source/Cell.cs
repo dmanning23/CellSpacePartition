@@ -1,7 +1,6 @@
-using Microsoft.Xna.Framework;
 using BasicPrimitiveBuddy;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using RectangleFLib;
 
 namespace CellSpacePartitionLib
 {
