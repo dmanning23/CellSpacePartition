@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+	<metadata>
+		<id>CellSpacePartition</id>
+		<version>1.0.0</version>
+		<title>CellSpacePartition</title>
+		<authors>dmanning23</authors>
+		<owners>dmanning23</owners>
+		<projectUrl>https://github.com/dmanning23/CellSpacePartition</projectUrl>
+		<licenseUrl>https://github.com/dmanning23/CellSpacePartition/blob/master/LICENSE.txt</licenseUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>A MonoGame library for splitting up a 2d game world into cells, used to speed up collision detection etc.</description>
+		<releaseNotes />
+		<copyright>Copyright 2016</copyright>
+		<tags>pcl, windows phone, winphone, android, ios, windows universal, monogame</tags>
+		<dependencies>
+
+			<!--Xamarin.Android-->
+			<group targetFramework="MonoAndroid10">
+				<dependency id="MonoGame.Framework.Android" version="3.5"/>
+				<dependency id="RectangleF" version="1.0"/>
+			</group>
+
+			<!--Xamarin.iOS Unified-->
+			<group targetFramework="Xamarin.iOS10">
+				<dependency id="MonoGame.Framework.iOS" version="3.5"/>
+				<dependency id="RectangleF" version="1.0"/>
+			</group>
+
+			<!--Win Universal-->
+			<group targetFramework="uap10.0">
+				<dependency id="MonoGame.Framework.WindowsUniversal" version="3.5"/>
+				<dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="5.1"/>
+				<dependency id="RectangleF" version="1.0"/>
+			</group>
+
+			<group targetFramework="net451">
+				<dependency id="MonoGame.Framework.DesktopGL" version="3.5"/>
+				<dependency id="RectangleF" version="1.0"/>
+			</group>
+
+		</dependencies>
+	</metadata>
+	<files>
+
+		<!--Xamarin.Android-->
+		<file src="CellSpacePartition.Android\bin\Release\CellSpacePartition.Android.pdb" target="lib\MonoAndroid10\CellSpacePartition.Android.pdb" />
+		<file src="CellSpacePartition.Android\bin\Release\CellSpacePartition.Android.dll" target="lib\MonoAndroid10\CellSpacePartition.Android.dll" />
+
+		<!--Xamarin.iOS Unified-->
+		<file src="CellSpacePartition.iOS\bin\Release\CellSpacePartition.iOS.pdb" target="lib\Xamarin.iOS10\CellSpacePartition.iOS.pdb" />
+		<file src="CellSpacePartition.iOS\bin\Release\CellSpacePartition.iOS.dll" target="lib\Xamarin.iOS10\CellSpacePartition.iOS.dll" />
+
+		<!--Windows Universal-->
+		<file src="CellSpacePartition.WindowsUniversal\bin\Release\CellSpacePartition.WindowsUniversal.pdb" target="lib\uap10.0\CellSpacePartition.WindowsUniversal.pdb" />
+		<file src="CellSpacePartition.WindowsUniversal\bin\Release\CellSpacePartition.WindowsUniversal.dll" target="lib\uap10.0\CellSpacePartition.WindowsUniversal.dll" />
+
+		<!--DesktopGL-->
+		<file src="CellSpacePartition.DesktopGL\bin\Release\CellSpacePartition.DesktopGL.pdb" target="lib\net451\CellSpacePartition.DesktopGL.pdb" />
+		<file src="CellSpacePartition.DesktopGL\bin\Release\CellSpacePartition.DesktopGL.dll" target="lib\net451\CellSpacePartition.DesktopGL.dll" />
+
+	</files>
+</package>
