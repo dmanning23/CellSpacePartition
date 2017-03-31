@@ -11,7 +11,7 @@ namespace CellSpacePartitionLib.Tests
 	[TestFixture]
 	public class UnitTest1
 	{
-		class Mover : IMovingEntity
+		public class Mover : IMovingEntity
 		{
 			public virtual Vector2 OldPosition
 			{
@@ -176,6 +176,21 @@ namespace CellSpacePartitionLib.Tests
 		}
 
 		[Test]
+		public void RemoveEntity()
+		{
+			var tester = new CellSpacePartition<Mover>(new Vector2(100.0f, 100.0f), 10, 10);
+			var entity = new Mock<Mover>();
+			entity.Setup(x => x.Position).Returns(new Vector2(25.0f, 15.0f));
+			tester.Add(entity.Object);
+
+			//remove the item
+			tester.Remove(entity.Object);
+
+			//make sure it went in the correct spot
+			Assert.AreEqual(0, tester.Cells[12].Items.Count);
+		}
+
+		[Test]
 		public void UpdateEntityRemoveOld()
 		{
 			//create the thing
@@ -231,7 +246,7 @@ namespace CellSpacePartitionLib.Tests
 		{
 			RectangleF box = CellSpacePartition<Mover>.CreateQueryBox(new Vector2(25.0f, 15.0f), 10.0f);
 
-			Assert.AreEqual(20.0f, box.Left);
+			Assert.AreEqual(15f, box.Left);
 		}
 
 		[Test]
@@ -239,7 +254,7 @@ namespace CellSpacePartitionLib.Tests
 		{
 			RectangleF box = CellSpacePartition<Mover>.CreateQueryBox(new Vector2(25.0f, 15.0f), 10.0f);
 
-			Assert.AreEqual(30.0f, box.Right);
+			Assert.AreEqual(35f, box.Right);
 		}
 
 		[Test]
@@ -247,7 +262,7 @@ namespace CellSpacePartitionLib.Tests
 		{
 			RectangleF box = CellSpacePartition<Mover>.CreateQueryBox(new Vector2(25.0f, 15.0f), 10.0f);
 
-			Assert.AreEqual(10.0f, box.Top);
+			Assert.AreEqual(5f, box.Top);
 		}
 
 		[Test]
@@ -255,7 +270,7 @@ namespace CellSpacePartitionLib.Tests
 		{
 			RectangleF box = CellSpacePartition<Mover>.CreateQueryBox(new Vector2(25.0f, 15.0f), 10.0f);
 
-			Assert.AreEqual(20.0f, box.Bottom);
+			Assert.AreEqual(25f, box.Bottom);
 		}
 
 		[Test]

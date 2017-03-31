@@ -56,12 +56,12 @@ namespace CellSpacePartitionLib
 			CellSize = new Vector2((WorldSize.X / NumCells.X), (WorldSize.Y / NumCells.Y));
 
 			//create the cells
-			for (int y = 0; y < NumCells.Y; ++y)
+			for (var y = 0; y < NumCells.Y; ++y)
 			{
-				for (int x = 0; x < NumCells.X; ++x)
+				for (var x = 0; x < NumCells.X; ++x)
 				{
-					float left = x * CellSize.X;
-					float top = y * CellSize.Y;
+					var left = x * CellSize.X;
+					var top = y * CellSize.Y;
 
 					Cells.Add(new Cell<T>(new RectangleFLib.RectangleF(left, top, CellSize.X, CellSize.Y)));
 				}
@@ -76,7 +76,7 @@ namespace CellSpacePartitionLib
 		/// <returns></returns>
 		public int PositionToIndex(Vector2 pos)
 		{
-			int idx = (int)(NumCells.X * pos.X / WorldSize.X) +
+			var idx = (int)(NumCells.X * pos.X / WorldSize.X) +
 					  ((int)(NumCells.Y * pos.Y / WorldSize.Y) * NumCells.X);
 
 			//if the entity's position is equal to vector2d(m_dSpaceWidth, m_dSpaceHeight)
@@ -93,13 +93,20 @@ namespace CellSpacePartitionLib
 		/// Used to add the entitys to the appropriate cell
 		/// </summary>
 		/// <param name="ent"></param>
-		/// <param name="pos"></param>
 		public void Add(T ent)
 		{
-			int sz = Cells.Count;
-			int idx = PositionToIndex(ent.Position);
-
+			var idx = PositionToIndex(ent.Position);
 			Cells[idx].Items.Add(ent);
+		}
+
+		/// <summary>
+		/// Used to remove the entitys from the appropriate cell
+		/// </summary>
+		/// <param name="ent"></param>
+		public void Remove(T ent)
+		{
+			var idx = PositionToIndex(ent.Position);
+			Cells[idx].Items.Remove(ent);
 		}
 
 		/// <summary>
@@ -110,17 +117,17 @@ namespace CellSpacePartitionLib
 		public void Update(T ent)
 		{
 			//if the index for the old pos and the new pos are not equal then the entity has moved to another cell.
-			int OldIdx = PositionToIndex(ent.OldPosition);
-			int NewIdx = PositionToIndex(ent.Position);
+			var oldIdx = PositionToIndex(ent.OldPosition);
+			var newIdx = PositionToIndex(ent.Position);
 
-			if (NewIdx == OldIdx)
+			if (newIdx == oldIdx)
 			{
 				return;
 			}
 
 			//the entity has moved into another cell so delete from current cell and add to new one
-			Cells[OldIdx].Items.Remove(ent);
-			Cells[NewIdx].Items.Add(ent);
+			Cells[oldIdx].Items.Remove(ent);
+			Cells[newIdx].Items.Add(ent);
 		}
 
 		/// <summary>
@@ -129,27 +136,27 @@ namespace CellSpacePartitionLib
 		///  If the cells contain entities then they are tested to see if they are situated within the target's neighborhood region. 
 		///  If they are they are added to neighbor list
 		/// </summary>
-		/// <param name="TargetPos"></param>
-		/// <param name="QueryRadius"></param>
+		/// <param name="targetPos"></param>
+		/// <param name="queryRadius"></param>
 		public List<T> CalculateNeighbors(Vector2 targetPos, float queryRadius)
 		{
 			//create the list of neighbors
-			List<T> neighbors = new List<T>();
+			var neighbors = new List<T>();
 
 			RectangleFLib.RectangleF queryBox = CreateQueryBox(targetPos, queryRadius);
 
 			//iterate through each cell and test to see if its bounding box overlaps with the query box. 
 			//If it does and it also contains entities then make further proximity tests.
-			float radiusSquared = (queryRadius * queryRadius);
-			for (int i = 0; i < Cells.Count; i++)
+			var radiusSquared = (queryRadius * queryRadius);
+			for (var i = 0; i < Cells.Count; i++)
 			{
 				//test to see if this cell contains members and if it overlaps the query box
 				if ((0 < Cells[i].Items.Count) && Cells[i].BBox.Intersects(queryBox))
 				{
 					//add any entities found within query radius to the neighbor list
-					for (int j = 0; j < Cells[i].Items.Count; j++)
+					for (var j = 0; j < Cells[i].Items.Count; j++)
 					{
-						float distToDude = Vector2.DistanceSquared(Cells[i].Items[j].Position, targetPos);
+						var distToDude = Vector2.DistanceSquared(Cells[i].Items[j].Position, targetPos);
 						if (distToDude <= radiusSquared)
 						{
 							neighbors.Add(Cells[i].Items[j]);
@@ -164,16 +171,14 @@ namespace CellSpacePartitionLib
 		/// <summary>
 		/// create the query box that is the bounding box of the target's query area
 		/// </summary>
-		/// <param name="TargetPos"></param>
-		/// <param name="QueryRadius"></param>
+		/// <param name="targetPos"></param>
+		/// <param name="queryRadius"></param>
 		/// <returns></returns>
 		public static RectangleFLib.RectangleF CreateQueryBox(Vector2 targetPos, float queryRadius)
 		{
-			float twoRadius = queryRadius * MathHelper.PiOver2;
-			float halfRadius = twoRadius * 0.5f;
-
-			Vector2 upLeft = targetPos - new Vector2(halfRadius, halfRadius);
-			return new RectangleFLib.RectangleF(upLeft.X, upLeft.Y, twoRadius, twoRadius);
+			var upLeft = targetPos - new Vector2(queryRadius, queryRadius);
+			var radius2 = queryRadius * 2f;
+			return new RectangleFLib.RectangleF(upLeft.X, upLeft.Y, radius2, radius2);
 		}
 
 		/// <summary>
@@ -181,7 +186,7 @@ namespace CellSpacePartitionLib
 		/// </summary>
 		public void Clear()
 		{
-			for (int i = 0; i < Cells.Count; i++)
+			for (var i = 0; i < Cells.Count; i++)
 			{
 				Cells[i].Items.Clear();
 			}
@@ -203,10 +208,10 @@ namespace CellSpacePartitionLib
 
 		public void RenderCellIntersections(IPrimitive primitive, Vector2 targetPos, float queryRadius, Color color)
 		{
-			RectangleFLib.RectangleF queryBox = CreateQueryBox(targetPos, queryRadius);
+			var queryBox = CreateQueryBox(targetPos, queryRadius);
 
 			//iterate through each cell and test to see if its bounding box overlaps with the query box. 
-			for (int i = 0; i < Cells.Count; i++)
+			for (var i = 0; i < Cells.Count; i++)
 			{
 				//test to see if this cell contains members and if it overlaps the query box
 				if (Cells[i].BBox.Intersects(queryBox))
