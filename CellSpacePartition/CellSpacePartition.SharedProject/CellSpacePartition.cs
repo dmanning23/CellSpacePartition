@@ -1,5 +1,6 @@
-using PrimitiveBuddy;
 using Microsoft.Xna.Framework;
+using PrimitiveBuddy;
+using System;
 using System.Collections.Generic;
 
 namespace CellSpacePartitionLib
@@ -12,31 +13,28 @@ namespace CellSpacePartitionLib
 	/// If an entity is capable of moving, and therefore capable of moving between cells, the Update 
 	/// method should be called each update-cycle to sychronize the entity and the cell space it occupies
 	/// </summary>
-	public class CellSpacePartition<T> where T : IMovingEntity
+	public class CellSpacePartition<T> : IPartition<T> where T : IMovingEntity
 	{
-		#region Members
+		#region Properties
 
 		/// <summary>
 		/// the required amount of cells in the space
 		/// </summary>
-		public List<Cell<T>> Cells { get; private set; }
+		protected List<Cell<T>> Cells { get; set; }
 
 		/// <summary>
-		/// the width and height of the world space the entities inhabit
+		/// This is a list of dudes that fall outside the cellspace
 		/// </summary>
-		public Vector2 WorldSize { get; private set; }
+		protected List<T> Floaters { get; set; }
 
 		/// <summary>
 		/// the number of cells the space is going to be divided up into
 		/// </summary>
-		public Point NumCells { get; private set; }
+		protected Point NumCells { get; set; }
 
-		/// <summary>
-		/// The size of each individual cell
-		/// </summary>
-		public Vector2 CellSize { get; private set; }
+		public RectangleFLib.RectangleF CellSpace { get; protected set; }
 
-		#endregion //Members
+		#endregion //Properties
 
 		#region Methods
 
@@ -46,79 +44,114 @@ namespace CellSpacePartitionLib
 		/// <param name="worldSize">size of 2D space</param>
 		/// <param name="cellsX">number of divisions horizontally</param>
 		/// <param name="cellsY">and vertically</param>
-		public CellSpacePartition(Vector2 worldSize, int cellsX, int cellsY)
+		public CellSpacePartition(Vector2 origin, int cellsize, int cellsX, int cellsY)
 		{
 			Cells = new List<Cell<T>>();
-			WorldSize = worldSize;
+
 			NumCells = new Point(cellsX, cellsY);
 
-			//calculate bounds of each cell
-			CellSize = new Vector2((WorldSize.X / NumCells.X), (WorldSize.Y / NumCells.Y));
+			var worldSize = NumCells.ToVector2() * cellsize;
+			CellSpace = new RectangleFLib.RectangleF(origin.X, origin.Y, worldSize.X, worldSize.Y);
 
 			//create the cells
 			for (var y = 0; y < NumCells.Y; ++y)
 			{
 				for (var x = 0; x < NumCells.X; ++x)
 				{
-					var left = x * CellSize.X;
-					var top = y * CellSize.Y;
+					var left = origin.X + x * cellsize;
+					var top = origin.Y + y * cellsize;
 
-					Cells.Add(new Cell<T>(new RectangleFLib.RectangleF(left, top, CellSize.X, CellSize.Y)));
+					Cells.Add(new Cell<T>(new RectangleFLib.RectangleF(left, top, cellsize, cellsize)));
 				}
 			}
+
+			Floaters = new List<T>();
 		}
 
 		/// <summary>
 		/// Given a 2D vector representing a position within the game world, 
 		/// this method calculates an index into its appropriate cell
 		/// </summary>
-		/// <param name="pos"></param>
+		/// <param name="position"></param>
 		/// <returns></returns>
-		public int PositionToIndex(Vector2 pos)
+		protected int PositionToIndex(Vector2 position)
 		{
-			var idx = (int)(NumCells.X * pos.X / WorldSize.X) +
-					  ((int)(NumCells.Y * pos.Y / WorldSize.Y) * NumCells.X);
+			var columnIndex = GetColumnIndex(position);
+			var rowIndex = GetRowIndex(position);
+			var cellIndex = GetColumnIndex(position) + (GetRowIndex(position) * NumCells.X);
 
 			//if the entity's position is equal to vector2d(m_dSpaceWidth, m_dSpaceHeight)
 			//then the index will overshoot. We need to check for this and adjust
-			if (idx > Cells.Count - 1)
+			if (columnIndex < 0 || NumCells.X <= columnIndex || rowIndex < 0 || NumCells.Y <= rowIndex)
 			{
-				idx = Cells.Count - 1;
+				cellIndex = -1;
 			}
 
-			return idx;
+			return cellIndex;
+		}
+
+		private int GetRowIndex(Vector2 position)
+		{
+			return (int)Math.Floor((NumCells.Y * (position.Y - CellSpace.Y)) / CellSpace.Height);
+		}
+
+		protected int GetColumnIndex(Vector2 position)
+		{
+			return (int)Math.Floor((NumCells.X * (position.X - CellSpace.X)) / CellSpace.Width);
 		}
 
 		/// <summary>
 		/// Used to add the entitys to the appropriate cell
 		/// </summary>
-		/// <param name="ent"></param>
-		public void Add(T ent)
+		/// <param name="item"></param>
+		public void Add(T item)
 		{
-			var idx = PositionToIndex(ent.Position);
-			Cells[idx].Items.Add(ent);
+			AddToCell(item, PositionToIndex(item.Position));
 		}
 
 		/// <summary>
 		/// Used to remove the entitys from the appropriate cell
 		/// </summary>
-		/// <param name="ent"></param>
-		public void Remove(T ent)
+		/// <param name="item"></param>
+		public void Remove(T item)
 		{
-			var idx = PositionToIndex(ent.Position);
-			Cells[idx].Items.Remove(ent);
+			RemoveFromCell(item, PositionToIndex(item.Position));
+		}
+
+		protected void AddToCell(T item, int cellIndex)
+		{
+			if (0 <= cellIndex && cellIndex < Cells.Count)
+			{
+				Cells[cellIndex].Items.Add(item);
+			}
+			else
+			{
+				Floaters.Add(item);
+			}
+		}
+
+		protected void RemoveFromCell(T item, int cellIndex)
+		{
+			if (0 <= cellIndex && cellIndex < Cells.Count)
+			{
+				Cells[cellIndex].Items.Remove(item);
+			}
+			else
+			{
+				Floaters.Remove(item);
+			}
 		}
 
 		/// <summary>
 		/// Checks to see if an entity has moved cells. 
 		/// If so the data structure is updated accordingly
 		/// </summary>
-		/// <param name="ent"></param>
-		public void Update(T ent)
+		/// <param name="item"></param>
+		public void Update(T item)
 		{
 			//if the index for the old pos and the new pos are not equal then the entity has moved to another cell.
-			var oldIdx = PositionToIndex(ent.OldPosition);
-			var newIdx = PositionToIndex(ent.Position);
+			var oldIdx = PositionToIndex(item.OldPosition);
+			var newIdx = PositionToIndex(item.Position);
 
 			if (newIdx == oldIdx)
 			{
@@ -126,8 +159,8 @@ namespace CellSpacePartitionLib
 			}
 
 			//the entity has moved into another cell so delete from current cell and add to new one
-			Cells[oldIdx].Items.Remove(ent);
-			Cells[newIdx].Items.Add(ent);
+			RemoveFromCell(item, oldIdx);
+			AddToCell(item, newIdx);
 		}
 
 		/// <summary>
@@ -138,12 +171,12 @@ namespace CellSpacePartitionLib
 		/// </summary>
 		/// <param name="targetPos"></param>
 		/// <param name="queryRadius"></param>
-		public List<T> CalculateNeighbors(Vector2 targetPos, float queryRadius)
+		public List<T> CalculateNeighbors(Vector2 targetPos, float queryRadius, bool fastQuery = false)
 		{
 			//create the list of neighbors
 			var neighbors = new List<T>();
 
-			RectangleFLib.RectangleF queryBox = CreateQueryBox(targetPos, queryRadius);
+			var queryBox = CreateQueryBox(targetPos, queryRadius);
 
 			//iterate through each cell and test to see if its bounding box overlaps with the query box. 
 			//If it does and it also contains entities then make further proximity tests.
@@ -153,15 +186,33 @@ namespace CellSpacePartitionLib
 				//test to see if this cell contains members and if it overlaps the query box
 				if ((0 < Cells[i].Items.Count) && Cells[i].BBox.Intersects(queryBox))
 				{
-					//add any entities found within query radius to the neighbor list
-					for (var j = 0; j < Cells[i].Items.Count; j++)
+					//If we are doing a fast query, just dump all the dudes in this cell
+					if (fastQuery)
 					{
-						var distToDude = Vector2.DistanceSquared(Cells[i].Items[j].Position, targetPos);
-						if (distToDude <= radiusSquared)
+						neighbors.AddRange(Cells[i].Items);
+					}
+					else
+					{
+						//add any entities found within query radius to the neighbor list
+						for (var j = 0; j < Cells[i].Items.Count; j++)
 						{
-							neighbors.Add(Cells[i].Items[j]);
+							var distToDude = Vector2.DistanceSquared(Cells[i].Items[j].Position, targetPos);
+							if (distToDude <= radiusSquared)
+							{
+								neighbors.Add(Cells[i].Items[j]);
+							}
 						}
 					}
+				}
+			}
+
+			//check the floaters too
+			for (var i = 0; i < Floaters.Count; i++)
+			{
+				var distToDude = Vector2.DistanceSquared(Floaters[i].Position, targetPos);
+				if (distToDude <= radiusSquared)
+				{
+					neighbors.Add(Floaters[i]);
 				}
 			}
 
@@ -174,7 +225,7 @@ namespace CellSpacePartitionLib
 		/// <param name="targetPos"></param>
 		/// <param name="queryRadius"></param>
 		/// <returns></returns>
-		public static RectangleFLib.RectangleF CreateQueryBox(Vector2 targetPos, float queryRadius)
+		protected RectangleFLib.RectangleF CreateQueryBox(Vector2 targetPos, float queryRadius)
 		{
 			var upLeft = targetPos - new Vector2(queryRadius, queryRadius);
 			var radius2 = queryRadius * 2f;
@@ -190,6 +241,7 @@ namespace CellSpacePartitionLib
 			{
 				Cells[i].Items.Clear();
 			}
+			Floaters.Clear();
 		}
 
 		#region Debug Rendering

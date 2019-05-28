@@ -6,11 +6,12 @@
     <SharedGUID>e8d618db-6b0f-4f24-89c8-90531418853a</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>CellSpacePartition.SharedProject</Import_RootNamespace>
+    <Import_RootNamespace>CellSpacePartitionLib</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Cell.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CellSpacePartition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IMovingEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IPartition.cs" />
   </ItemGroup>
 </Project>
