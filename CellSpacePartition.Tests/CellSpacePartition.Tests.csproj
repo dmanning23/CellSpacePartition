@@ -44,7 +44,7 @@
       <HintPath>..\packages\Castle.Core.4.4.1\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="FakeItEasy, Version=6.0.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
-      <HintPath>..\packages\FakeItEasy.6.2.0\lib\net45\FakeItEasy.dll</HintPath>
+      <HintPath>..\packages\FakeItEasy.6.2.1\lib\net45\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="MatrixExtensions.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MatrixExtensions.2.0.0\lib\net451\MatrixExtensions.WindowsDX.dll</HintPath>
@@ -60,7 +60,7 @@
       <HintPath>..\packages\PrimitiveBuddy.2.0.1\lib\net451\PrimitiveBuddy.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="RandomExtensions.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RandomExtensions.dmanning23.2.0.0\lib\net452\RandomExtensions.WindowsDX.dll</HintPath>
+      <HintPath>..\packages\RandomExtensions.dmanning23.2.0.1\lib\net452\RandomExtensions.WindowsDX.dll</HintPath>
     </Reference>
     <Reference Include="RectangleF.WindowsDX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RectangleF.2.0.0\lib\net451\RectangleF.WindowsDX.dll</HintPath>
@@ -120,10 +120,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AddEntityTests.cs" />
+    <Compile Include="NearestNeighborTests.cs" />
+    <Compile Include="QueryBoxTests.cs" />
     <Compile Include="ConstructionTests.cs" />
     <Compile Include="PositionToIndexTests.cs" />
     <Compile Include="TestCellSpacePartition.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="CalcNeighborTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -244,6 +244,43 @@ namespace CellSpacePartitionLib
 			Floaters.Clear();
 		}
 
+		public T NearestNeighbor(Vector2 targetPos, float queryRadius)
+		{
+			//get all the dudes in range
+			var inRange = CalculateNeighbors(targetPos, queryRadius);
+
+			float closestDistance = 0f;
+			T closest = default(T);
+
+			//set the "closest" to the first available
+			if (inRange.Count >= 1)
+			{
+				closest = inRange[0];
+				closestDistance = DistanceSquared(targetPos, inRange[0]);
+			}
+
+			//loop through the rest and see if there are any closer
+			if (inRange.Count >= 2)
+			{
+				for (int i = 1; i < inRange.Count; i++)
+				{
+					var distance = DistanceSquared(targetPos, inRange[i]);
+					if (distance < closestDistance)
+					{
+						closest = inRange[i];
+						closestDistance = distance;
+					}
+				}
+			}
+
+			return closest;
+		}
+
+		private float DistanceSquared(Vector2 position, IMovingEntity dude)
+		{
+			return (dude.Position - position).LengthSquared();
+		}
+
 		#region Debug Rendering
 
 		/// <summary>

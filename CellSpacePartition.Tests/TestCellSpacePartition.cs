@@ -6,6 +6,8 @@ namespace CellSpacePartitionLib.Tests
 {
 	public class Mover : IMovingEntity
 	{
+		public virtual int Id { get; set; }
+
 		public virtual Vector2 OldPosition
 		{
 			get

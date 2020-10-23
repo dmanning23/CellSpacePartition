@@ -16,6 +16,8 @@ namespace CellSpacePartitionLib
 
 		List<T> CalculateNeighbors(Vector2 targetPos, float queryRadius, bool fastQuery = false);
 
+		T NearestNeighbor(Vector2 targetPos, float queryRadius);
+
 		void Clear();
 
 		void RenderCells(IPrimitive primitive);

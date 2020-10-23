@@ -48,6 +48,5 @@ namespace CellSpacePartitionLib.Tests
 			var partition = new TestCellSpacePartition(new Vector2(0, 0), cellSize, 0, numRows);
 			partition.CellSpace.Height.ShouldBe(expectedValue);
 		}
-
 	}
 }
