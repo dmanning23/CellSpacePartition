@@ -2,34 +2,42 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>CellSpacePartition</id>
-		<version>2.0.4</version>
+		<version>4.0.0</version>
 		<title>CellSpacePartition</title>
 		<authors>dmanning23</authors>
-		<owners>dmanning23</owners>
 		<projectUrl>https://github.com/dmanning23/CellSpacePartition</projectUrl>
 		<licenseUrl>https://github.com/dmanning23/CellSpacePartition/blob/master/LICENSE.txt</licenseUrl>
-		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>A MonoGame library for splitting up a 2d game world into cells, used to speed up collision detection etc.</description>
-		<releaseNotes />
-		<copyright>Copyright 2016</copyright>
 		<tags>pcl, windows phone, winphone, android, ios, windows universal, monogame</tags>
 		<dependencies>
 
 			<!--Xamarin.Android-->
 			<group targetFramework="MonoAndroid10">
 				<dependency id="MonoGame.Framework.Android" version="3.7"/>
-				<dependency id="RectangleF" version="2.0"/>
+				<dependency id="MatrixExtensions" version="4.0"/>
+				<dependency id="PrimitiveBuddy" version="4.0"/>
+				<dependency id="RandomExtensions.dmanning23" version="4.0"/>
+				<dependency id="RectangleF" version="4.0"/>
+				<dependency id="Vector2Extensions" version="4.0"/>
 			</group>
 
 			<!--Xamarin.iOS Unified-->
 			<group targetFramework="Xamarin.iOS10">
 				<dependency id="MonoGame.Framework.iOS" version="3.7"/>
-				<dependency id="RectangleF" version="2.0"/>
+				<dependency id="MatrixExtensions" version="4.0"/>
+				<dependency id="PrimitiveBuddy" version="4.0"/>
+				<dependency id="RandomExtensions.dmanning23" version="4.0"/>
+				<dependency id="RectangleF" version="4.0"/>
+				<dependency id="Vector2Extensions" version="4.0"/>
 			</group>
 
-			<group targetFramework="net451">
+			<group targetFramework="net452">
 				<dependency id="MonoGame.Framework.WindowsDX" version="3.7"/>
-				<dependency id="RectangleF" version="2.0"/>
+				<dependency id="MatrixExtensions" version="4.0"/>
+				<dependency id="PrimitiveBuddy" version="4.0"/>
+				<dependency id="RandomExtensions.dmanning23" version="4.0"/>
+				<dependency id="RectangleF" version="4.0"/>
+				<dependency id="Vector2Extensions" version="4.0"/>
 			</group>
 
 		</dependencies>
@@ -45,8 +53,8 @@
 		<file src="CellSpacePartition.iOS\bin\Release\CellSpacePartition.iOS.dll" target="lib\Xamarin.iOS10\CellSpacePartition.iOS.dll" />
 
 		<!--WindowsDX-->
-		<file src="CellSpacePartition.WindowsDX\bin\Release\CellSpacePartition.WindowsDX.pdb" target="lib\net451\CellSpacePartition.WindowsDX.pdb" />
-		<file src="CellSpacePartition.WindowsDX\bin\Release\CellSpacePartition.WindowsDX.dll" target="lib\net451\CellSpacePartition.WindowsDX.dll" />
+		<file src="CellSpacePartition.WindowsDX\bin\Release\CellSpacePartition.WindowsDX.pdb" target="lib\net452\CellSpacePartition.WindowsDX.pdb" />
+		<file src="CellSpacePartition.WindowsDX\bin\Release\CellSpacePartition.WindowsDX.dll" target="lib\net452\CellSpacePartition.WindowsDX.dll" />
 
 	</files>
 </package>
